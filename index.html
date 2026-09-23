@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#174b38">
+<link rel="manifest" href="manifest.webmanifest">
+<title>WoodID Demo</title>
+<style>
+:root{--g:#174b38;--g2:#246a4e;--cream:#f5f0e6;--card:#fff;--ink:#1e2924;--muted:#65716b;--wood:#b77945}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--cream);color:var(--ink)}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:88px}
+header{position:sticky;top:0;z-index:3;background:rgba(245,240,230,.94);backdrop-filter:blur(12px);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd5c8}
+.brand{font-weight:900;font-size:22px;color:var(--g)} button,select{font:inherit}
+.hero{padding:34px 22px 20px;text-align:center}.tree{font-size:72px}.hero h1{font-size:40px;margin:5px}.hero p{color:var(--muted);font-size:18px}
+.primary{border:0;background:var(--g);color:white;border-radius:16px;padding:16px 20px;font-weight:800;width:100%;font-size:17px}
+.secondary{border:1px solid #c8c0b4;background:white;border-radius:14px;padding:13px 16px;width:100%}
+.wrap{padding:0 18px}.card{background:var(--card);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 6px 22px #2c3d3420}
+.tip{display:flex;gap:12px}.small{font-size:13px;color:var(--muted)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:white;border-top:1px solid #ddd;padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:4}
+nav button{border:0;background:none;padding:7px 2px;color:#52615a;font-size:12px}nav .ico{font-size:22px;display:block}
+.screen{display:none}.screen.active{display:block}
+.camera{background:#18201d;color:white;min-height:72vh;padding:20px;text-align:center}.preview{height:360px;border-radius:24px;border:3px solid #b9d6c8;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6c482f,#c69362);margin:18px 0;overflow:hidden}.preview img{width:100%;height:100%;object-fit:cover}
+.resultTitle{text-align:center}.score{font-size:38px;font-weight:900;color:var(--g)}.bar{height:12px;background:#e4e6e2;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;width:91%;background:var(--g)}
+.badge{display:inline-block;background:#efe2c7;color:#75572e;padding:7px 10px;border-radius:99px;font-size:12px;font-weight:800}
+.species{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee}
+.lang{border:1px solid #d1c9bd;border-radius:10px;padding:7px;background:white}
+input[type=file]{display:none}.notice{background:#fff2cf;border-radius:14px;padding:12px;margin:12px 0;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">🌳 WoodID</div><select id="lang" class="lang"><option value="es">ES</option><option value="de">DE</option><option value="it">IT</option><option value="pt">PT</option><option value="en">EN</option></select></header>
+
+<main id="home" class="screen active">
+<section class="hero"><div class="tree">🌳</div><h1>WoodID</h1><p data-t="tagline"></p></section>
+<div class="wrap">
+<label class="primary" style="display:block;text-align:center" for="photo">📷 <span data-t="scan"></span></label>
+<input id="photo" type="file" accept="image/*" capture="environment">
+<div class="card tip"><b>💡</b><div><b data-t="tipTitle"></b><div data-t="tip"></div></div></div>
+<div class="notice" data-t="demo"></div>
+</div></main>
+
+<main id="camera" class="screen"><div class="camera">
+<h2 data-t="quality"></h2><p data-t="checking"></p>
+<div class="preview" id="preview">🌲</div>
+<button class="primary" id="analyze" data-t="analyze"></button>
+</div></main>
+
+<main id="result" class="screen"><div class="wrap">
+<div class="resultTitle"><div style="font-size:65px">🌳</div><span class="badge" data-t="demoBadge"></span><h1 data-t="oak"></h1><i>Quercus robur</i><div class="score">91%</div><div data-t="confidence"></div></div>
+<div class="card"><div class="bar"><i></i></div><p>✓ <span data-t="f1"></span></p><p>✓ <span data-t="f2"></span></p><p>✓ <span data-t="f3"></span></p></div>
+<div class="card"><h3 data-t="alternatives"></h3><div class="species"><span data-t="ash"></span><b>6%</b></div><div class="species"><span data-t="beech"></span><b>3%</b></div></div>
+<button class="primary" onclick="go('home')" data-t="again"></button>
+</div></main>
+
+<main id="guide" class="screen"><div class="wrap"><h1 data-t="guide"></h1><div id="guideList"></div></div></main>
+<main id="history" class="screen"><div class="wrap"><h1 data-t="history"></h1><div class="card"><b data-t="oak"></b><div><i>Quercus robur</i> · 91%</div><div class="small" data-t="demoHistory"></div></div></div></main>
+<main id="settings" class="screen"><div class="wrap"><h1 data-t="settings"></h1><div class="card"><h3 data-t="language"></h3><p data-t="langHelp"></p></div><div class="card"><b>WoodID PWA 0.9</b><p data-t="privacy"></p></div></div></main>
+
+<nav>
+<button onclick="go('home')"><span class="ico">📷</span><span data-t="scan"></span></button>
+<button onclick="go('guide')"><span class="ico">📖</span><span data-t="guide"></span></button>
+<button onclick="go('history')"><span class="ico">🕘</span><span data-t="history"></span></button>
+<button onclick="go('settings')"><span class="ico">⚙️</span><span data-t="settings"></span></button>
+</nav></div>
+<script>
+const T={
+es:{tagline:"Identifica la madera por su corte",scan:"Escanear",tipTitle:"Consejo",tip:"Fotografía la testa/corte transversal con buena luz y enfoque.",demo:"Demo móvil: analiza tu foto en el dispositivo, pero la especie mostrada todavía es un resultado simulado.",quality:"Comprobar fotografía",checking:"Revisa que el corte ocupe buena parte de la imagen y esté enfocado.",analyze:"Analizar madera",demoBadge:"RESULTADO DE DEMOSTRACIÓN",oak:"Roble común",confidence:"Confianza",f1:"Poros grandes visibles",f2:"Anillos marcados",f3:"Radios medulares compatibles",alternatives:"Otras posibilidades",ash:"Fresno europeo",beech:"Haya europea",again:"Escanear otra pieza",guide:"Guía",history:"Historial",settings:"Ajustes",demoHistory:"Escaneo de demostración",language:"Idioma",langHelp:"Puedes cambiar el idioma arriba.",privacy:"La foto seleccionada no se sube a ningún servidor en esta demo."},
+de:{tagline:"Holz am Querschnitt erkennen",scan:"Scannen",tipTitle:"Tipp",tip:"Fotografiere den Hirnschnitt bei gutem Licht und scharf.",demo:"Mobile Demo: Dein Foto bleibt auf dem Gerät; die angezeigte Holzart ist noch simuliert.",quality:"Foto prüfen",checking:"Der Querschnitt sollte groß und scharf im Bild sein.",analyze:"Holz analysieren",demoBadge:"DEMO-ERGEBNIS",oak:"Stieleiche",confidence:"Sicherheit",f1:"Große Poren sichtbar",f2:"Deutliche Jahrringe",f3:"Passende Holzstrahlen",alternatives:"Weitere Möglichkeiten",ash:"Gemeine Esche",beech:"Rotbuche",again:"Weiteres Stück scannen",guide:"Leitfaden",history:"Verlauf",settings:"Einstellungen",demoHistory:"Demo-Scan",language:"Sprache",langHelp:"Sprache oben ändern.",privacy:"Das ausgewählte Foto wird in dieser Demo nicht hochgeladen."},
+it:{tagline:"Identifica il legno dalla sezione",scan:"Scansiona",tipTitle:"Consiglio",tip:"Fotografa la sezione trasversale con buona luce e messa a fuoco.",demo:"Demo mobile: la foto resta sul dispositivo; la specie mostrata è ancora simulata.",quality:"Controlla foto",checking:"La sezione deve occupare buona parte dell'immagine ed essere nitida.",analyze:"Analizza legno",demoBadge:"RISULTATO DEMO",oak:"Farnia",confidence:"Affidabilità",f1:"Pori grandi visibili",f2:"Anelli marcati",f3:"Raggi compatibili",alternatives:"Altre possibilità",ash:"Frassino maggiore",beech:"Faggio europeo",again:"Scansiona un altro pezzo",guide:"Guida",history:"Cronologia",settings:"Impostazioni",demoHistory:"Scansione demo",language:"Lingua",langHelp:"Puoi cambiare lingua in alto.",privacy:"La foto selezionata non viene caricata su server in questa demo."},
+pt:{tagline:"Identifique a madeira pelo corte",scan:"Digitalizar",tipTitle:"Dica",tip:"Fotografe o corte transversal com boa luz e foco.",demo:"Demo móvel: a foto fica no dispositivo; a espécie apresentada ainda é simulada.",quality:"Verificar fotografia",checking:"O corte deve ocupar boa parte da imagem e estar focado.",analyze:"Analisar madeira",demoBadge:"RESULTADO DEMO",oak:"Carvalho-alvarinho",confidence:"Confiança",f1:"Poros grandes visíveis",f2:"Anéis marcados",f3:"Raios compatíveis",alternatives:"Outras possibilidades",ash:"Freixo-europeu",beech:"Faia-europeia",again:"Digitalizar outra peça",guide:"Guia",history:"Histórico",settings:"Definições",demoHistory:"Digitalização demo",language:"Idioma",langHelp:"Pode alterar o idioma acima.",privacy:"A fotografia selecionada não é enviada para nenhum servidor nesta demo."},
+en:{tagline:"Identify wood from its end grain",scan:"Scan",tipTitle:"Tip",tip:"Photograph the end grain in good light and sharp focus.",demo:"Mobile demo: your photo stays on the device; the displayed species is still simulated.",quality:"Check photo",checking:"Make sure the end grain fills much of the image and is sharp.",analyze:"Analyze wood",demoBadge:"DEMO RESULT",oak:"English oak",confidence:"Confidence",f1:"Large pores visible",f2:"Strong growth rings",f3:"Compatible medullary rays",alternatives:"Other possibilities",ash:"European ash",beech:"European beech",again:"Scan another piece",guide:"Guide",history:"History",settings:"Settings",demoHistory:"Demo scan",language:"Language",langHelp:"Change language above.",privacy:"The selected photo is not uploaded to any server in this demo."}
+};
+const woods=[["oak","Quercus robur"],["beech","Fagus sylvatica"],["ash","Fraxinus excelsior"],["Pino / Kiefer / Pine","Pinus sylvestris"],["Pícea / Fichte / Spruce","Picea abies"]];
+let lang="es";
+function render(){
+ document.querySelectorAll("[data-t]").forEach(e=>{let k=e.dataset.t;if(T[lang][k])e.textContent=T[lang][k]});
+ document.documentElement.lang=lang;
+ document.getElementById("guideList").innerHTML=woods.map(w=>`<div class="card"><b>${T[lang][w[0]]||w[0]}</b><div><i>${w[1]}</i></div></div>`).join("");
+}
+function go(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");scrollTo(0,0)}
+document.getElementById("lang").onchange=e=>{lang=e.target.value;render()};
+document.getElementById("photo").onchange=e=>{let f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f);document.getElementById("preview").innerHTML=`<img src="${u}">`;go("camera")};
+document.getElementById("analyze").onclick=()=>{document.getElementById("analyze").textContent="…";setTimeout(()=>{render();go("result");document.getElementById("analyze").textContent=T[lang].analyze},900)};
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+render();
+</script>
+</body></html>
